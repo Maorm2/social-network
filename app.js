@@ -43,16 +43,12 @@ app.use((req, res, next) => {
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, PATCH, DELETE"
   );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Content-Type,Authorization"
-  );
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization");
   next();
 });
 
 app.use("/feed", feedRoutes);
 app.use("/auth", authRoutes);
-
 
 app.use((error, req, res, next) => {
   console.log(error);
@@ -67,6 +63,10 @@ mongoose
     "mongodb+srv://maor:bletbM0OWu3jL8W1@cluster0.msv9r.mongodb.net/post?authSource=admin&replicaSet=atlas-indgky-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true"
   )
   .then((result) => {
-    app.listen(8080);
+    const server = app.listen(8080);
+    const io = require('./socket').init(server);
+    io.on("connection", (socket) => {
+      console.log("Client connected");
+    });
   })
   .catch((err) => console.log(err));
