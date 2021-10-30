@@ -1,14 +1,21 @@
 const path = require("path");
+const fs = require("fs");
 
 const express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
+const helmet = require("helmet");
+const morgan = require("morgan");
+const compression = require('compression');
 
 const feedRoutes = require("./routes/feed");
 const authRoutes = require("./routes/auth");
 
+const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.msv9r.mongodb.net/${process.env.MONGO_DEFAULT_DB}?authSource=admin&replicaSet=atlas-indgky-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true`;
+
 const app = express();
+
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -31,6 +38,14 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+const accessLogStream = fs.createWriteStream(
+  path.join(__dirname, "access.log"),
+  { flags: "a" }
+);
+
+app.use(helmet());
+app.use(compression());
+app.use(morgan("combined", { stream: accessLogStream }));
 app.use(express.json());
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
@@ -59,12 +74,10 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(
-    "mongodb+srv://maor:bletbM0OWu3jL8W1@cluster0.msv9r.mongodb.net/post?authSource=admin&replicaSet=atlas-indgky-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true"
-  )
+  .connect(MONGODB_URI)
   .then((result) => {
-    const server = app.listen(8080);
-    const io = require('./socket').init(server);
+    const server = app.listen(process.env.PORT || 8080);
+    const io = require("./socket").init(server);
     io.on("connection", (socket) => {
       console.log("Client connected");
     });

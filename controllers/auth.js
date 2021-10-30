@@ -58,7 +58,7 @@ exports.login = (req, res, next) => {
             email: loadedUser.email,
             userId: loadedUser._id.toString(),
           },
-          "secretwebtokensecret",
+          process.env.SECRET_KEY,
           { expiresIn: "1h" }
         );
         res
