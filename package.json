@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "SET NODE_ENV = production MONGO_USER=maor MONGO_PASSWORD=bletbM0OWu3jL8W1 MONGO_DEFAULT_DB=post PORT=8080 SECRET_KEY=secretwebtokensecret & node app.js",
+    "start": "SET NODE_ENV=production MONGO_USER=maor MONGO_PASSWORD=bletbM0OWu3jL8W1 MONGO_DEFAULT_DB=post PORT=8080 SECRET_KEY=secretwebtokensecret & node app.js",
     "start:dev": "nodemon app.js"
   },
   "keywords": [],
