@@ -1,5 +1,7 @@
 const path = require("path");
 const fs = require("fs");
+require('dotenv').config()
+
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -15,7 +17,6 @@ const authRoutes = require("./routes/auth");
 const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0.msv9r.mongodb.net/${process.env.MONGO_DEFAULT_DB}?authSource=admin&replicaSet=atlas-indgky-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true`;
 
 const app = express();
-
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
